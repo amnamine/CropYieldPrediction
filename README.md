@@ -9,7 +9,7 @@ The target variable matches FAO-style data: **yield in hectograms per hectare (`
 ## Repository layout
 
 ```
-Chaima_CropYield/
+CropYield/
 ├── Training_Code1.ipynb      # Full pipeline: EDA, features, models, tuning, saving .pkl
 ├── requirements.txt          # Python dependencies
 ├── dataset/
@@ -136,7 +136,7 @@ Response (success): `predicted_yield_hg_per_ha`, `rain_temp_ratio`.
 ### Install dependencies
 
 ```bash
-cd Chaima_CropYield
+cd CropYield
 pip install -r requirements.txt
 ```
 
