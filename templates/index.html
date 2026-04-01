@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Crop Yield Lab — Predictor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <div class="bg-pattern" aria-hidden="true"></div>
+  <header class="site-header">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <div>
+        <h1>Crop Yield Lab</h1>
+        <p class="tagline">Decision tree model · same pipeline as your training notebook</p>
+      </div>
+    </div>
+    <nav class="header-note">
+      <span class="pill">Flask</span>
+      <span class="pill pill-muted">hg/ha</span>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="panel panel-intro" aria-labelledby="intro-heading">
+      <h2 id="intro-heading">What this does</h2>
+      <p>
+        Enter country, crop, year, rainfall, pesticide use, and average temperature.
+        The app builds the engineered feature <strong>rain / (temp + 0.1)</strong>, one-hot encodes
+        <strong>Area</strong> and <strong>Item</strong> (drop-first, like pandas <code>get_dummies</code>),
+        scales with your saved <strong>StandardScaler</strong>, and runs the tuned <strong>DecisionTree</strong>
+        from <code>Training_Code1.ipynb</code>.
+      </p>
+      <ul class="checklist">
+        <li>Outputs predicted yield in <strong>hectograms per hectare</strong> (dataset target).</li>
+        <li>Uses <code>crop_yield_prediction_model.pkl</code>, <code>crop_yield_scaler.pkl</code>, <code>model_features.pkl</code>.</li>
+      </ul>
+    </section>
+
+    <section class="panel panel-form">
+      <form id="predict-form" novalidate>
+        <div class="form-grid">
+          <label class="field">
+            <span class="label">Country (Area)</span>
+            <select name="area" id="area" required>
+              <option value="" disabled selected>Select country</option>
+              {% for a in areas %}
+              <option value="{{ a }}">{{ a }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="field">
+            <span class="label">Crop (Item)</span>
+            <select name="item" id="item" required>
+              <option value="" disabled selected>Select crop</option>
+              {% for c in items %}
+              <option value="{{ c }}">{{ c }}</option>
+              {% endfor %}
+            </select>
+          </label>
+          <label class="field">
+            <span class="label">Year</span>
+            <input type="number" name="year" id="year" step="1" min="1960" max="2035" value="2010" required />
+          </label>
+          <label class="field">
+            <span class="label">Rainfall (mm / year)</span>
+            <input type="number" name="average_rain_fall_mm_per_year" id="rain" step="0.1" min="0" value="1200" required />
+          </label>
+          <label class="field">
+            <span class="label">Pesticides (tonnes)</span>
+            <input type="number" name="pesticides_tonnes" id="pesticides" step="0.01" min="0" value="50" required />
+          </label>
+          <label class="field">
+            <span class="label">Avg temperature (°C)</span>
+            <input type="number" name="avg_temp" id="temp" step="0.01" value="18" required />
+          </label>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="submit-btn">
+            <span class="btn-text">Run prediction</span>
+            <span class="btn-spinner" hidden aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-ghost" id="reset-btn">Reset</button>
+        </div>
+      </form>
+      <p class="form-error" id="form-error" role="alert" hidden></p>
+    </section>
+
+    <section class="panel panel-result" id="result-panel" hidden>
+      <h2>Predicted yield</h2>
+      <div class="result-hero">
+        <span class="result-value" id="result-value">—</span>
+        <span class="result-unit">hg/ha</span>
+      </div>
+      <p class="result-meta">Derived feature <strong>rain_temp_ratio</strong>: <span id="result-ratio">—</span></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>TP Crop Yield — academic demo. Align inputs with <code>yield_df.csv</code> semantics.</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
