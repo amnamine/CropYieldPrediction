@@ -1,4 +1,4 @@
-# Chaima_CropYield — Crop yield prediction (ML + web demos)
+#CropYield — Crop yield prediction (ML + web demos)
 
 Academic project for **predicting agricultural crop yield** from country, crop type, climate, and pesticide use. It follows a full **scikit-learn** workflow in `Training_Code1.ipynb`, exports reusable artifacts, and ships **two optional front-ends**: a **Flask** site (HTML/CSS/JS) and a **Streamlit** app.
 
